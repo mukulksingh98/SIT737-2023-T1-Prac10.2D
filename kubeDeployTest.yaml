@@ -8,7 +8,7 @@ spec:
   selector:
     matchLabels:
       app: my-node-app
-  replicas: 1
+  replicas: 3
   template:
     metadata:
       labels:
@@ -16,6 +16,6 @@ spec:
     spec:
       containers:
         - name: my-node-app
-          image:  mukulksingh98/sit737:latest
+          image:  gcr.io/sit727-23t1-singh-99b19b1/my-node-app
           ports:
             - containerPort: 5000

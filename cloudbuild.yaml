@@ -17,7 +17,7 @@ steps:
 
 # Configure kubectl authentication
   - name: 'gcr.io/cloud-builders/gcloud'
-    args: ['container', 'clusters', 'get-credentials', 'my-cluster']
+    args: ['container', 'clusters', 'get-credentials', 'my-cluster', '--region', 'australia-southeast1']
 
   # Deploy to GKE using kubectl
   - name: 'gcr.io/cloud-builders/kubectl'

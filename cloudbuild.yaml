@@ -1,16 +1,24 @@
 steps:
   # Build the Docker image
   - name: 'gcr.io/cloud-builders/docker'
-    args: ['build', '-t', 'gcr.io/sit727-23t1-singh-99b19b1/my-node-app', '.']
+    args: ['build', '-t', 'gcr.io/sit727-23t1-singh-99b19b1/sit737:latest', '.']
 
-  # Push the Docker image to Container Registry
+  # Install dependencies
+  - name: 'gcr.io/cloud-builders/npm'
+    args: ['install']
+
+  # Run unit tests
+  - name: 'gcr.io/cloud-builders/npm'
+    args: ['test']
+
+  # Push the Docker image to Google Container Registry (GCR)
   - name: 'gcr.io/cloud-builders/docker'
-    args: ['push', 'gcr.io/sit727-23t1-singh-99b19b1/my-node-app']
+    args: ['push', 'gcr.io/sit727-23t1-singh-99b19b1/sit737:latest']
 
-  # Configure kubectl authentication
+# Configure kubectl authentication
   - name: 'gcr.io/cloud-builders/gcloud'
     args: ['container', 'clusters', 'get-credentials', 'my-cluster']
 
   # Deploy to GKE using kubectl
   - name: 'gcr.io/cloud-builders/kubectl'
-    args: ['apply', '-f', 'deploy.yaml']
+    args: ['apply', '-f', 'kubeDeployTest.yaml']

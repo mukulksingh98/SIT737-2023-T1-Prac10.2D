@@ -50,7 +50,6 @@ jobs:
     - name: 'Set up Cloud Cli'
       uses: 'google-github-actions/setup-gcloud@v1'
       with:
-        service_account_key: ${{ secrets.GKE_SA_KEY }}
         project_id: ${{ secrets.GKE_PROJECT }}
 
     - name: Configure Docker Environment
@@ -59,9 +58,9 @@ jobs:
     - name: Set up GKE credentials
       uses: google-github-actions/get-gke-credentials@v1
       with:
+        project_id: ${{ secrets.GKE_PROJECT }}
         cluster_name: ${{ env.GKE_CLUSTER }}
         location: ${{ env.GKE_ZONE }}
-        credentials: ${{ secrets.GKE_SA_KEY }}
 
     - name: Build Docker Image
       run: docker build -t gcr.io/${{ env.PROJECT_ID }}/sit737:latest .

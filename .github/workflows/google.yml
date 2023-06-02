@@ -53,21 +53,26 @@ jobs:
         version: '350.0.0'
         project_id: ${{ env.PROJECT_ID }}
         service_account_key: ${{ secrets.GKE_SA_KEY }}
-     
+      run: |
+        gcloud --version
+        gcloud auth activate-service-account --key-file=${{ secrets.GKE_SA_KEY }}
+        gcloud container clusters get-credentials ${{ env.GKE_CLUSTER }} --zone ${{ env.GKE_ZONE }}
+        gcloud auth configure-docker
+
     - name: Build Docker Image
       run: docker build -t gcr.io/${{ env.PROJECT_ID }}/sit737:latest .
 
     - name: Configure Docker Environment
-      run: |-
+      run: |
         gcloud container clusters get-credentials ${{ env.GKE_CLUSTER }} --zone ${{ env.GKE_ZONE }}
-        gcloud auth configure-docker
+ #        gcloud auth configure-docker
         
     - name: Push Docker Image
-      run: |-
+      run: |
         docker push gcr.io/${{ env.PROJECT_ID }}/sit737:latest
         
     - name: Deploy to GKE
-      run: |-
+      run: |
         sed -i "s/{TAG}/$GITHUB_SHA/g" deployment.yaml
         kubectl apply -f deployment.yaml
         kubectl apply -f service.yaml 

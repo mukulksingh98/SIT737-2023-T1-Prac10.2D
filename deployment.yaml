@@ -17,6 +17,6 @@ spec:
       containers:
         - name: app
           image:  gcr.to/PROJECT_ID/IMAGE:TAG
-          imagePullPloicy: Always
+          imagePullPolicy: Always
           ports:
             - containerPort: 5000

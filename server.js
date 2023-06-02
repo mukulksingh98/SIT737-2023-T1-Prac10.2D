@@ -16,6 +16,10 @@ app.get("/health", (req, res) => {
   res.json({ statusCode: 200, data: "Success" });
 });
 
+app.get("/", (req, res) => {
+  res.send("<h2>Hello this is the home page</h2>");
+});
+
 app.listen(PORT, () => {
   console.log(`Server Started on port ${PORT}`);
 });

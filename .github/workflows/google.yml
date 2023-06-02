@@ -47,28 +47,26 @@ jobs:
     - name: Run Tests
       run: npm test
 
-    - name: Authenticate to Google Cloud
-      id: auth
-      uses: 'google-github-actions/auth@v1'
-      with:
-        credentials_json: '${{ secrets.GKE_PROJECT }}'
-
-    - name: 'Set up Cloud SDK'
+    - name: 'Set up Cloud Cli'
       uses: 'google-github-actions/setup-gcloud@v1'
       with:
-        version: '>= 363.0.0'
+        service_account_key: ${{ secrets.GKE_SA_KEY }}
+        project_id: ${{ secrets.GKE_PROJECT }}
 
     - name: Configure Docker Environment
-      run: |
-        gcloud container clusters get-credentials ${{ env.GKE_CLUSTER }} --zone ${{ env.GKE_ZONE }}
-        gcloud auth configure-docker
+      run: gcloud --quiet auth configure-docker
+
+    - name: Set up GKE credentials
+      uses: google-github-actions/get-gke-credentials@v1
+      with:
+        cluster_name: ${{ env.GKE_CLUSTER }}
+        location: ${{ env.GKE_ZONE }}
 
     - name: Build Docker Image
       run: docker build -t gcr.io/${{ env.PROJECT_ID }}/sit737:latest .
 
     - name: Push Docker Image
-      run: |
-        docker push gcr.io/${{ env.PROJECT_ID }}/sit737:latest
+      run: docker push gcr.io/${{ env.PROJECT_ID }}/sit737:latest
         
     - name: Deploy to GKE
       run: |

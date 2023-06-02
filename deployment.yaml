@@ -15,7 +15,8 @@ spec:
         app: my-node-app
     spec:
       containers:
-        - name: my-node-app
-          image:  gcr.io/sit727-23t1-singh-99b19b1/sit737:latest
+        - name: app
+          image:  gcr.to/PROJECT_ID/IMAGE:TAG
+          imagePullPloicy: Always
           ports:
             - containerPort: 5000

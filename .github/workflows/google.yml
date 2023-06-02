@@ -47,20 +47,19 @@ jobs:
     - name: Run Tests
       run: npm test
 
-    - name: 'Set up Cloud Cli'
-      uses: 'google-github-actions/setup-gcloud@v1'
+    - name: 'Set up Google Cloud Cli'
+      uses: 'google-github-actions/setup-gcloud@v0.1.3'
+      env:
+        ACTIONS_ALLOW_UNSECURE_COMMANDS: true
       with:
+        service_account_key: ${{ secrets.GKE_SA_KEY }}
         project_id: ${{ secrets.GKE_PROJECT }}
 
     - name: Configure Docker Environment
       run: gcloud --quiet auth configure-docker
 
     - name: Set up GKE credentials
-      uses: google-github-actions/get-gke-credentials@v1
-      with:
-        project_id: ${{ secrets.GKE_PROJECT }}
-        cluster_name: ${{ env.GKE_CLUSTER }}
-        location: ${{ env.GKE_ZONE }}
+      run: gcloud container clusters get-credentials ${{ env.GKE_CLUSTER }} --zone ${{ env.GKE_ZONE }}
 
     - name: Build Docker Image
       run: docker build -t gcr.io/${{ env.PROJECT_ID }}/sit737:latest .
